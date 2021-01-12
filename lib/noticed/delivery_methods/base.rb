@@ -61,7 +61,7 @@ module Noticed
       #
       def post(url, args = {})
         uri = URI.parse(url)
-        req = Net::HTTP::Post.new(uri.host, uri.port)
+        req = Net::HTTP::Post.new(uri)
 
         basic_auth = args.delete(:basic_auth)
         req.basic_auth(basic_auth[:user], basic_auth[:pass]) if basic_auth
