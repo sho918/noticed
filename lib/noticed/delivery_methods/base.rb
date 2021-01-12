@@ -60,15 +60,15 @@ module Noticed
       #   post("http://example.com", basic_auth: {user:, pass:}, json: {}, form: {})
       #
       def post(url, args = {})
+        uri = URI.parse(url)
+        req = Net::HTTP::Post.new(uri.host, uri.port)
+
         basic_auth = args.delete(:basic_auth)
+        req.basic_auth(basic_auth[:user], basic_auth[:pass]) if basic_auth
 
-        request = if basic_auth
-          HTTP.basic_auth(user: basic_auth[:user], pass: basic_auth[:pass])
-        else
-          HTTP
+        response = Net::HTTP.start(uri.host, uri.port, args) do |http|
+          http.request(req)
         end
-
-        response = request.post(url, args)
 
         if options[:debug]
           Rails.logger.debug("POST #{url}")
