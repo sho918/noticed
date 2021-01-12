@@ -66,9 +66,7 @@ module Noticed
         basic_auth = args.delete(:basic_auth)
         req.basic_auth(basic_auth[:user], basic_auth[:pass]) if basic_auth
 
-        response = Net::HTTP.start(uri.host, uri.port, args) do |http|
-          http.request(req)
-        end
+        response = Net::HTTP.start(uri.host, uri.port, args) { |http| http.request(req) }
 
         if options[:debug]
           Rails.logger.debug("POST #{url}")
